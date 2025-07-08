@@ -1,5 +1,6 @@
 import { Container, Row, Col, Tab, Nav } from "react-bootstrap";
 import { ProjectCard } from "../Molecules/ProjectCard";
+import { PortfolioStats } from "../Molecules/PortfolioStats";
 import projImg1 from "../../assets/img/kasa.png";
 import projImg2 from "../../assets/img/webfit.png";
 import projImg3 from "../../assets/img/laby.png";
@@ -10,6 +11,7 @@ import projImg7 from "../../assets/img/horloge.png";
 import projImg8 from "../../assets/img/Rain.png";
 import projImg9 from "../../assets/img/trattoria.png";
 import projImg10 from "../../assets/img/url-shortener.png";
+import projImg11 from "../../assets/img/marmitouille.png";
 import colorSharp2 from "../../assets/img/color-sharp2.png";
 import "animate.css";
 import TrackVisibility from "react-on-screen";
@@ -21,6 +23,7 @@ export const Projects = () => {
       description:
         "Application web React de location immobilière, API intégrée",
       imgUrl: projImg1,
+      videoUrl: "https://www.loom.com/share/908788b5360042e6976bb3206dbcee41",
     },
     {
       title: "WEBFIT 🏋️",
@@ -35,21 +38,21 @@ export const Projects = () => {
       imgUrl: projImg3,
     },
     {
-      title: "Générateur de citations (EN) 💬",
+      title: "Marmitouille 🍽️",
       description:
         "Petite application React faite à partir d'une API de génération de citations",
-      imgUrl: projImg4,
-    },
-    {
-      title: "G la recette (EN) 🍽️",
-      description:
-        "Application web React également faites à partir d'une API, choisissez un ingrédient et vous aurez une liste de recettes avec celui-ci",
-      imgUrl: projImg5,
+      imgUrl: projImg11,
+      videoUrl: "https://www.loom.com/share/cb424c688b594cfb996ee97f2d5d65a6?sid=2b5aca93-26bf-441a-9fd6-a746a10cdefa",
     },
     {
       title: "API Météo ⛅",
       description: "Vous donne la météo de n'importe quelle ville",
       imgUrl: projImg6,
+    },{
+      title: "Générateur de citations (EN) 💬",
+      description:
+        "Petite application React faite à partir d'une API de génération de citations",
+      imgUrl: projImg4,
     },
   ];
   const projects2 = [
@@ -77,10 +80,16 @@ export const Projects = () => {
         "Un petit exercice dans lequel on fait tomber la pluie sur une page web en jouant avec du CSS et des méthodes JS",
       imgUrl: projImg8,
     },
+    {
+      title: "G la recette (EN) 🍽️",
+      description:
+        "Application web React également faites à partir d'une API, choisissez un ingrédient et vous aurez une liste de recettes avec celui-ci",
+      imgUrl: projImg5,
+    },
   ];
 
   return (
-    <section className="project" id="projects">
+    <section className="project" id="projects" data-testid="projects-section">
       <Container>
         <Row>
           <Col size={12}>
@@ -104,13 +113,13 @@ export const Projects = () => {
                       id="pills-tab"
                     >
                       <Nav.Item>
-                        <Nav.Link eventKey="first">Onglet 1</Nav.Link>
+                        <Nav.Link eventKey="first">Projets React</Nav.Link>
                       </Nav.Item>
                       <Nav.Item>
-                        <Nav.Link eventKey="second">Onglet 2</Nav.Link>
+                        <Nav.Link eventKey="second">Autres Projets</Nav.Link>
                       </Nav.Item>
                       <Nav.Item>
-                        <Nav.Link eventKey="third">Onglet 3</Nav.Link>
+                        <Nav.Link eventKey="third">Statistiques</Nav.Link>
                       </Nav.Item>
                     </Nav>
                     <Tab.Content
@@ -134,12 +143,7 @@ export const Projects = () => {
                         </Row>
                       </Tab.Pane>
                       <Tab.Pane eventKey="third">
-                        <p>
-                          Je suis constamment à l'affût des dernières tendances
-                          technologiques et je m'engage à rester à jour pour
-                          offrir des solutions adaptées aux besoins changeants
-                          du marché.
-                        </p>
+                        <PortfolioStats />
                       </Tab.Pane>
                     </Tab.Content>
                   </Tab.Container>
