@@ -1,3 +1,5 @@
+
+
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Button, Modal, Form } from "react-bootstrap";
 import "./NProjects.css";
@@ -121,8 +123,9 @@ function NProjects() {
     }
 
     try {
-      const addResponse = await fetch("http://localhost:5001/api/projects", {
-        method: "POST",
+      // Tentative 1: utiliser un endpoint d'update s'il existe côté back
+      const putResponse = await fetch(`http://localhost:5001/api/projects/${editableProject.id}` , {
+        method: "PUT",
         body: formData,
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -130,33 +133,59 @@ function NProjects() {
         credentials: 'include'
       });
 
-      if (!addResponse.ok) {
-        const errorData = await addResponse.json();
-        throw new Error(errorData.message || "Erreur lors de la mise à jour du projet");
+      if (putResponse.ok) {
+        const updatedProject = await putResponse.json();
+        setProjects(projects.map((p) => (p.id === editableProject.id ? updatedProject : p)));
+        handleEditClose();
+        return;
       }
 
-      const updatedProject = await addResponse.json();
-
-      const deleteResponse = await fetch(
-        `http://localhost:5001/api/projects/${editableProject.id}`,
-        {
-          method: "DELETE",
+      // Si le back ne supporte pas encore PUT, on retombe sur la stratégie POST + DELETE existante
+      if (putResponse.status === 404 || putResponse.status === 405) {
+        const addResponse = await fetch("http://localhost:5001/api/projects", {
+          method: "POST",
+          body: formData,
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
           credentials: 'include'
-        }
-      );
+        });
 
-      if (!deleteResponse.ok) {
-        const errorData = await deleteResponse.json();
-        throw new Error(errorData.message || "Erreur lors de la suppression de l'ancien projet");
+        if (!addResponse.ok) {
+          const errorData = await addResponse.json();
+          throw new Error(errorData.message || "Erreur lors de la mise à jour du projet (création)");
+        }
+
+        const createdProject = await addResponse.json();
+
+        const deleteResponse = await fetch(
+          `http://localhost:5001/api/projects/${editableProject.id}`,
+          {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+            credentials: 'include'
+          }
+        );
+
+        if (!deleteResponse.ok) {
+          const errorData = await deleteResponse.json();
+          throw new Error(errorData.message || "Erreur lors de la suppression de l'ancien projet");
+        }
+
+        setProjects(projects.map((p) => (p.id === editableProject.id ? createdProject : p)));
+        handleEditClose();
+        return;
       }
 
-      setProjects(
-        projects.map((p) => (p.id === editableProject.id ? updatedProject : p))
-      );
-      handleEditClose();
+      // Autres erreurs serveur côté PUT
+      try {
+        const errData = await putResponse.json();
+        throw new Error(errData.message || "Échec de la mise à jour du projet");
+      } catch (_) {
+        throw new Error("Échec de la mise à jour du projet");
+      }
     } catch (error) {
       console.error("Error updating project:", error);
       setError(error.message);

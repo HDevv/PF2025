@@ -1,0 +1,12 @@
+à faire : 
+
+- vérifier si la modification de projets existants fonctionne bien 
+- corriger le formulaire de contact ✅
+- MCD, MPD ✅
+- requêtes SQL complexes pour les stats ✅
+- être capable de justifier les technologies utilisées 
+- Lancer les tests et en parler dans le dossier (captures résultats)
+- Réparer le formulaire de contact
+
+
+on peut voir les users à partir du fichier database.sqlite

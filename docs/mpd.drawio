@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" agent="Cascade" version="22.0.3" type="device">
+  <diagram id="mpd-pf2025" name="MPD">
+    <mxGraphModel dx="1086" dy="690" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Table: users -->
+        <mxCell id="tbl-users" value="&lt;b&gt;users&lt;/b&gt;\n— id : INT UNSIGNED PK AI\n— email : VARCHAR(128) UNIQUE\n— password : VARCHAR(128)\n— level : DECIMAL(10,2) DEFAULT 0\n— createdAt : DATETIME\n— updatedAt : DATETIME" style="shape=swimlane;rounded=1;whiteSpace=wrap;html=1;strokeColor=#1a73e8;fillColor=#e8f0fe;align=left;verticalAlign=top;startSize=26;spacing=8;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="120" y="110" width="270" height="190" as="geometry"/>
+        </mxCell>
+
+        <!-- Table: projects -->
+        <mxCell id="tbl-projects" value="&lt;b&gt;projects&lt;/b&gt;\n— id : INT UNSIGNED PK AI\n— image : VARCHAR(255)\n— description : VARCHAR(255) NOT NULL\n— link : VARCHAR(255) DEFAULT ''\n— userId : INT NOT NULL FK → users.id\n— createdAt : DATETIME\n— updatedAt : DATETIME" style="shape=swimlane;rounded=1;whiteSpace=wrap;html=1;strokeColor=#34a853;fillColor=#e6f4ea;align=left;verticalAlign=top;startSize=26;spacing=8;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="520" y="110" width="320" height="210" as="geometry"/>
+        </mxCell>
+
+        <!-- Relationship: FK projects.userId -> users.id -->
+        <mxCell id="edge-users-projects" value="FK projects.userId → users.id\n(ON UPDATE CASCADE, ON DELETE RESTRICT)" style="endArrow=block;endFill=1;html=1;strokeColor=#111111;labelBackgroundColor=#ffffff;fontSize=12;" edge="1" parent="1" source="tbl-projects" target="tbl-users">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="0" y="0" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

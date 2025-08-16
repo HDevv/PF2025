@@ -58,6 +58,65 @@ export class CProject {
         }
     }
     
+    static update = async (request: Request, response: Response, next: NextFunction) => {
+        try {
+            const { id } = request.params;
+            const { description, link } = request.body as { description?: string; link?: string };
+            const userId = (request as any).user?.id;
+
+            if (!userId) {
+                throw new ExpressError(401, "Utilisateur non authentifié");
+            }
+
+            const project = await Project.findOne({ where: { id, userId } });
+            if (!project) {
+                throw new ExpressError(404, "Projet non trouvé");
+            }
+
+            // Préparer les données à mettre à jour (ne met à jour que les champs fournis)
+            const updateData: any = {};
+            if (typeof description === 'string' && description.trim().length > 0) {
+                updateData.description = description.trim();
+            }
+            if (typeof link === 'string') {
+                updateData.link = link.trim();
+            }
+
+            // Gestion de l'image: si une nouvelle est fournie, supprimer l'ancienne puis définir la nouvelle URL
+            if (request.file) {
+                const uploadsDir = "./uploads";
+                if (!fs.existsSync(uploadsDir)) {
+                    fs.mkdirSync(uploadsDir, { recursive: true });
+                }
+
+                // Supprimer l'ancienne image si existante
+                const oldImgUrl = project.dataValues.image as string | undefined;
+                if (oldImgUrl) {
+                    const oldName = oldImgUrl.split('/').pop() || "";
+                    const oldPath = path.join(uploadsDir, oldName);
+                    if (fs.existsSync(oldPath)) {
+                        fs.unlinkSync(oldPath);
+                    }
+                }
+
+                updateData.image = `${BASE_SERVER}/images/${request.file.filename}`;
+            }
+
+            // Appliquer la mise à jour
+            await project.update(updateData);
+            response.json(project);
+        } catch (e: any) {
+            // Si une erreur survient et qu'un fichier a été uploadé, le supprimer pour éviter les orphelins
+            if (request.file) {
+                const filePath = path.join("./uploads", request.file.filename);
+                if (fs.existsSync(filePath)) {
+                    fs.unlinkSync(filePath);
+                }
+            }
+            next(e);
+        }
+    }
+
     static delete = async (request: Request, response: Response, next: NextFunction) => {
         try {
             const { id } = request.params;

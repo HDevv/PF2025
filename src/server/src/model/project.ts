@@ -1,13 +1,13 @@
 import { DataTypes, CreationOptional, Model, InferAttributes, InferCreationAttributes } from 'sequelize';
 import { sequelize } from '../data/conn';
-import { User } from '../model/user';  // 🔥 Import du modèle User
+import { User } from '../model/user';  // Import du modèle User
 
 export class Project extends Model<InferAttributes<Project>, InferCreationAttributes<Project>> {
     declare id: CreationOptional<number>;
     declare image: string;
     declare description: string;
     declare link: string;
-    declare userId: number;  // 🔥 Ajout de l'association avec un user
+    declare userId: number;  // Ajout de l'association avec un user
     declare createdAt: CreationOptional<Date>;
     declare updatedAt: CreationOptional<Date>;
 }
@@ -32,7 +32,7 @@ Project.init(
             allowNull: true,
             defaultValue: ""
         },
-        userId: { // 🔥 Clé étrangère pour identifier qui a créé le projet
+        userId: { // Clé étrangère pour identifier qui a créé le projet
             type: DataTypes.INTEGER,
             allowNull: false,
             references: { model: User, key: 'id' }

@@ -2,7 +2,43 @@ import express from 'express';
 import { CProject } from '~/controler/project';
 import { checkToken } from '~/middleware/checkToken';
 import multer from 'multer'
-const upload = multer({ dest: 'uploads/' })
+import path from 'path'
+import { v4 as uuidv4 } from 'uuid'
+
+// Secure multer configuration
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/')
+  },
+  filename: (req, file, cb) => {
+    // Generate safe filename with UUID to prevent conflicts
+    const ext = path.extname(file.originalname).toLowerCase()
+    const safeName = `${uuidv4()}${ext}`
+    cb(null, safeName)
+  }
+})
+
+// File filter for security
+const fileFilter = (req: any, file: any, cb: any) => {
+  const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
+  const allowedExts = ['.jpg', '.jpeg', '.png', '.webp']
+  const ext = path.extname(file.originalname).toLowerCase()
+  
+  if (allowedTypes.includes(file.mimetype) && allowedExts.includes(ext)) {
+    cb(null, true)
+  } else {
+    cb(new Error('Type de fichier non autorisé. Seuls JPG, PNG et WebP sont acceptés.'), false)
+  }
+}
+
+const upload = multer({ 
+  storage,
+  fileFilter,
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB max
+    files: 1
+  }
+})
 
 export const projectRouter = express.Router();
 
@@ -105,6 +141,41 @@ projectRouter.get('/', CProject.getAll)
  */
 projectRouter.post('/', checkToken as any, upload.single('image'), CProject.add as any)
 
+
+/**
+ * @swagger
+ * /projects/{id}:
+ *  put:
+ *      summary: Update a project by id
+ *      tags: [Projects]
+ *      parameters:
+ *          - in: path
+ *            name: id
+ *            schema:
+ *                type: string
+ *            required: true
+ *            description: The project id
+ *      requestBody:
+ *          required: false
+ *          content:
+ *              multipart/form-data:
+ *                  schema:
+ *                      $ref: '#/components/schemas/ProjectSend'
+ *      responses:
+ *          200:
+ *              description: The updated project
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Project'
+ *          401:
+ *              description: Authorization needed
+ *          404:
+ *              description: Project not found
+ *      security:
+ *          - api_key: []
+ */
+projectRouter.put('/:id', checkToken as any, upload.single('image'), CProject.update as any)
 
 /**
  * @swagger

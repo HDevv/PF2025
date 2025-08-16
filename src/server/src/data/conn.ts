@@ -28,9 +28,9 @@ export const sequelize = new Sequelize({
     },
 });
 
-// Configuration des constantes
-export const SECRET_TOKEN = "kawabounga";
-export const BASE_SERVER = "http://localhost:5001";
+// Configuration des constantes - utiliser variables d'environnement en production
+export const SECRET_TOKEN = process.env.JWT_SECRET || "kawabounga";
+export const BASE_SERVER = process.env.BASE_SERVER || "http://localhost:5001";
 
 // Initialisation de la base de données
 const initDatabase = async () => {

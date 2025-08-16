@@ -4,14 +4,15 @@ import { PortfolioStats } from "../Molecules/PortfolioStats";
 import projImg1 from "../../assets/img/kasa.png";
 import projImg2 from "../../assets/img/webfit.png";
 import projImg3 from "../../assets/img/laby.png";
-import projImg4 from "../../assets/img/Gen.png";
+import projImg4 from "../../assets/img/event-time.png";
 import projImg5 from "../../assets/img/recipe.png";
 import projImg6 from "../../assets/img/meteo.png";
-import projImg7 from "../../assets/img/horloge.png";
+// import projImg7 from "../../assets/img/horloge.png";
 import projImg8 from "../../assets/img/Rain.png";
 import projImg9 from "../../assets/img/trattoria.png";
 import projImg10 from "../../assets/img/url-shortener.png";
 import projImg11 from "../../assets/img/marmitouille.png";
+import projImg12 from "../../assets/img/projet-z.png";
 import colorSharp2 from "../../assets/img/color-sharp2.png";
 import "animate.css";
 import TrackVisibility from "react-on-screen";
@@ -23,7 +24,6 @@ export const Projects = () => {
       description:
         "Application web React de location immobilière, API intégrée",
       imgUrl: projImg1,
-      videoUrl: "https://www.loom.com/share/908788b5360042e6976bb3206dbcee41",
     },
     {
       title: "WEBFIT 🏋️",
@@ -45,14 +45,16 @@ export const Projects = () => {
       videoUrl: "https://www.loom.com/share/cb424c688b594cfb996ee97f2d5d65a6?sid=2b5aca93-26bf-441a-9fd6-a746a10cdefa",
     },
     {
-      title: "API Météo ⛅",
-      description: "Vous donne la météo de n'importe quelle ville",
-      imgUrl: projImg6,
+      title: "Projet Z (clone de twitter) ",
+      description: "Un réseau social en Django (python) avec un design moderne et une interface utilisateur agréable",
+      imgUrl: projImg12,
+      videoUrl: "https://www.loom.com/share/4976338c0d744eb1ad115440fcf01138?sid=755c21a6-afff-457c-855a-71f8e986db05"
     },{
-      title: "Générateur de citations (EN) 💬",
+      title: "Event Time 📅",
       description:
-        "Petite application React faite à partir d'une API de génération de citations",
+        "Gestionnaire d'évènements fait en Symfony",
       imgUrl: projImg4,
+      videoUrl: "https://www.loom.com/share/908788b5360042e6976bb3206dbcee41"
     },
   ];
   const projects2 = [
@@ -70,9 +72,10 @@ export const Projects = () => {
     },
 
     {
-      title: "Horloge ⌚",
-      description: "Horloge donnant l'heure actuelle intégrée avec HTML/CC/JS",
-      imgUrl: projImg7,
+      title: "Générateur de citations (EN) 💬",
+      description:
+        "Petite application React faite à partir d'une API de génération de citations",
+      imgUrl: projImg4,
     },
     {
       title: "Rain 🌧️",
@@ -86,6 +89,11 @@ export const Projects = () => {
         "Application web React également faites à partir d'une API, choisissez un ingrédient et vous aurez une liste de recettes avec celui-ci",
       imgUrl: projImg5,
     },
+    {
+      title: "API Météo ⛅",
+      description: "Vous donne la météo de n'importe quelle ville",
+      imgUrl: projImg6,
+    }
   ];
 
   return (

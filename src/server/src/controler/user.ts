@@ -62,8 +62,16 @@ export class CUser {
                 { expiresIn: '24h' }
             );
 
+            // Place token in HttpOnly cookie to mitigate XSS exfiltration
+            const isProd = process.env.NODE_ENV === 'production';
+            response.cookie('access_token', token, {
+                httpOnly: true,
+                secure: isProd, // true only over HTTPS
+                sameSite: 'lax',
+                maxAge: 24 * 60 * 60 * 1000 // 24h
+            });
+
             response.json({ 
-                token,
                 user: {
                     id: user.id,
                     email: user.email,

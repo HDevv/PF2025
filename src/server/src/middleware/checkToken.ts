@@ -15,20 +15,19 @@ declare global {
 
 export const checkToken = (req: Request, res: Response, next: NextFunction) => {
     try {
-        let token = "";
-        if (req.headers.authorization && req.headers.authorization.split(" ")[1]) {
-            token = req.headers.authorization.split(" ")[1];
-            const decoded = jwt.verify(token, SECRET_TOKEN) as User;
-            console.log(decoded);
-            if (decoded) {
-                req.user = decoded;
-                next();
-            } else {
-                throw new ExpressError(401, "route protégée");
-            }
-        } else {
-            throw new ExpressError(401, "route protégée");
+        // Prefer HttpOnly cookie set at login
+        const cookieToken = (req as any).cookies?.access_token as string | undefined;
+        const headerToken = req.headers.authorization?.split(" ")[1];
+        const token = cookieToken || headerToken || "";
+
+        if (!token) throw new ExpressError(401, "route protégée");
+
+        const decoded = jwt.verify(token, SECRET_TOKEN) as User;
+        if (decoded) {
+            req.user = decoded;
+            return next();
         }
+        throw new ExpressError(401, "route protégée");
     } catch (e) {
         next(e);
     }
