@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" agent="Cascade" version="22.0.3" type="device">
+  <diagram id="mld-pf2025" name="MLD">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Relation: User -->
+        <mxCell id="rel-user" value="&lt;b&gt;User&lt;/b&gt;&lt;br/&gt;&lt;u&gt;id&lt;/u&gt; : Entier&lt;br/&gt;email : Chaîne(128) UNIQUE&lt;br/&gt;password : Chaîne(128)&lt;br/&gt;level : Décimal(10,2) DEFAULT 0&lt;br/&gt;createdAt : Date/Heure&lt;br/&gt;updatedAt : Date/Heure" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#1a73e8;fillColor=#e8f0fe;align=left;verticalAlign=top;spacing=8;fontSize=12;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="120" y="150" width="280" height="140" as="geometry"/>
+        </mxCell>
+
+        <!-- Relation: Project -->
+        <mxCell id="rel-project" value="&lt;b&gt;Project&lt;/b&gt;&lt;br/&gt;&lt;u&gt;id&lt;/u&gt; : Entier&lt;br/&gt;image : Chaîne(255) NULLABLE&lt;br/&gt;description : Chaîne(255) NOT NULL&lt;br/&gt;link : Chaîne(255) DEFAULT ''&lt;br/&gt;&lt;u&gt;#userId&lt;/u&gt; : Entier → User.id&lt;br/&gt;createdAt : Date/Heure&lt;br/&gt;updatedAt : Date/Heure" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#34a853;fillColor=#e6f4ea;align=left;verticalAlign=top;spacing=8;fontSize=12;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="520" y="150" width="300" height="160" as="geometry"/>
+        </mxCell>
+
+        <!-- Association logique: User (1,N) ←→ Project -->
+        <mxCell id="assoc-user-project" value="possède" style="rhombus;whiteSpace=wrap;html=1;strokeColor=#ff6d01;fillColor=#ffe6cc;fontSize=12;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="430" y="200" width="80" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Cardinalités -->
+        <mxCell id="card-user" value="1,N" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontWeight=bold;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="400" y="175" width="30" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="card-project" value="0,N" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontWeight=bold;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="510" y="175" width="30" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- Connexions -->
+        <mxCell id="edge-user-assoc" value="" style="endArrow=none;html=1;strokeColor=#111111;strokeWidth=2;" edge="1" parent="1" source="rel-user" target="assoc-user-project">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="edge-assoc-project" value="" style="endArrow=none;html=1;strokeColor=#111111;strokeWidth=2;" edge="1" parent="1" source="assoc-user-project" target="rel-project">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Légende -->
+        <mxCell id="legend-title" value="&lt;b&gt;Légende MLD&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=14;fontWeight=bold;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="120" y="350" width="120" height="30" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="legend-pk" value="&lt;u&gt;Attribut souligné&lt;/u&gt; : Clé primaire" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="120" y="380" width="200" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="legend-fk" value="&lt;u&gt;#Attribut&lt;/u&gt; : Clé étrangère" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="120" y="400" width="200" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="legend-card" value="1,N / 0,N : Cardinalités" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="120" y="420" width="200" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- Contraintes d'intégrité -->
+        <mxCell id="constraints-title" value="&lt;b&gt;Contraintes d'intégrité&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=14;fontWeight=bold;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="520" y="350" width="180" height="30" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="constraint-1" value="• User.email UNIQUE" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="520" y="380" width="150" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="constraint-2" value="• Project.userId → User.id" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="520" y="400" width="180" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="constraint-3" value="• Project.description NOT NULL" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;fontFamily=Arial;" vertex="1" parent="1">
+          <mxGeometry x="520" y="420" width="200" height="20" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

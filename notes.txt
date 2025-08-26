@@ -9,6 +9,7 @@
 - Rédiger la partie sur les tests 
 - Réparer le formulaire de contact ✅
 - optimiser le mode clair
+- Vérifier le bon déroulement de la mise en production
 
 
 on peut voir les users à partir du fichier database.sqlite
