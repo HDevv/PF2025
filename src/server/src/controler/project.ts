@@ -8,7 +8,14 @@ import path from "path"
 export class CProject {
     static getAll = async (request: Request, response: Response, next: NextFunction) => {
         try {
-            const projects = await Project.findAll()
+            const userId = (request as any).user?.id;
+
+            if (!userId) {
+                throw new ExpressError(401, "Utilisateur non authentifié");
+            }
+
+            // Récupérer seulement les projets de l'utilisateur connecté
+            const projects = await Project.findAll({ where: { userId } })
             response.json(projects)
         } catch (e: any) {
             next(e)
@@ -40,6 +47,10 @@ export class CProject {
                 if (!fs.existsSync(uploadsDir)) {
                     fs.mkdirSync(uploadsDir, { recursive: true });
                 }
+
+                console.log(`Image uploaded: ${request.file.filename}`);
+                console.log(`File path: ${path.join(uploadsDir, request.file.filename)}`);
+                console.log(`URL will be: ${BASE_SERVER}/images/${request.file.filename}`);
 
                 projectData.image = `${BASE_SERVER}/images/${request.file.filename}`;
             }
@@ -122,13 +133,21 @@ export class CProject {
             const { id } = request.params;
             const userId = (request as any).user?.id;
 
+            console.log(`DELETE request - ID: ${id}, UserID: ${userId}`);
+
             if (!userId) {
                 throw new ExpressError(401, "Utilisateur non authentifié");
             }
 
+            // Debug: vérifier si le projet existe (sans filtre userId)
+            const projectExists = await Project.findByPk(id);
+            console.log(`Project exists: ${!!projectExists}`);
+            
             const project = await Project.findOne({ where: { id, userId } });
+            console.log(`Project found for user: ${!!project}`);
+            
             if (!project) {
-                throw new ExpressError(404, "Projet non trouvé");
+                throw new ExpressError(404, `Projet non trouvé - ID: ${id}, UserID: ${userId}`);
             }
 
             // Supprimer l'image si elle existe

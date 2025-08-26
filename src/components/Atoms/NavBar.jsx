@@ -33,9 +33,21 @@ export const NavBar = ({ onShowProjectModal }) => {
     setActiveLink(value);
   };
 
-  const handleLogout = () => {
-    setUser(null);
-    localStorage.removeItem("token");
+  const handleLogout = async () => {
+    try {
+      // Appeler l'endpoint de logout côté serveur pour supprimer le cookie
+      await fetch("http://localhost:5001/api/users/logout", {
+        method: "POST",
+        credentials: 'include'
+      });
+    } catch (error) {
+      console.error("Erreur lors de la déconnexion:", error);
+    } finally {
+      // Nettoyer l'état utilisateur côté frontend
+      setUser(null);
+      localStorage.removeItem("token"); // Au cas où il y aurait encore du localStorage
+      navigate("/"); // Rediriger vers l'accueil
+    }
   };
 
   const handleEditProjects = () => {

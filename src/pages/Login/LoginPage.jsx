@@ -32,13 +32,14 @@ const LoginPage = () => {
       const data = await response.json();
       console.log("Réponse du serveur:", data);
 
-      if (!data.token) {
-        throw new Error("Token non reçu du serveur");
+      // Le token est maintenant dans un cookie HttpOnly, pas en JSON
+      if (!data.user) {
+        throw new Error("Données utilisateur non reçues du serveur");
       }
 
-      console.log("Connexion réussie, token reçu");
-      localStorage.setItem("token", data.token);
-      setUser({ email });
+      console.log("Connexion réussie, cookie reçu");
+      // Plus besoin de localStorage, le token est dans le cookie HttpOnly
+      setUser({ email: data.user.email, level: data.user.level });
     } catch (error) {
       console.error("Erreur détaillée:", error);
       setError(error.message || "Erreur lors de la connexion");

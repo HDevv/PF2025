@@ -3,7 +3,6 @@ import { User } from "~/model/user"
 import { ExpressError } from "~/middleware/error"
 import jwt from 'jsonwebtoken'
 import { SECRET_TOKEN } from "~/data/conn"
-import bcrypt from 'bcrypt'
 
 export class CUser {
     static register = async (request: Request, response: Response, next: NextFunction) => {
@@ -47,7 +46,7 @@ export class CUser {
                 throw new ExpressError(401, "Email ou mot de passe incorrect");
             }
 
-            const isValidPassword = await bcrypt.compare(password, user.password);
+            const isValidPassword = user.comparePassword(password);
             if (!isValidPassword) {
                 throw new ExpressError(401, "Email ou mot de passe incorrect");
             }
@@ -78,6 +77,21 @@ export class CUser {
                     level: user.level
                 }
             });
+        } catch (e: any) {
+            next(e);
+        }
+    }
+
+    static logout = async (request: Request, response: Response, next: NextFunction) => {
+        try {
+            // Supprimer le cookie HttpOnly
+            response.clearCookie('access_token', {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'strict'
+            });
+
+            response.status(200).json({ message: "Déconnexion réussie" });
         } catch (e: any) {
             next(e);
         }

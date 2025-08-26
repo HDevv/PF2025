@@ -113,7 +113,7 @@ export const projectRouter = express.Router();
  *                          items:
  *                              $ref: '#/components/schemas/Project'
  */
-projectRouter.get('/', CProject.getAll)
+projectRouter.get('/', checkToken as any, CProject.getAll)
 
 /**
  * @swagger

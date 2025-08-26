@@ -1,15 +1,18 @@
 
 
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Button, Modal, Form } from "react-bootstrap";
+import { Container, Row, Col, Button, Modal, Form, Alert } from "react-bootstrap";
 import "./NProjects.css";
 import { useProjects } from "../../context/ProjectsContext";
+import { useUser } from "../../context/UserContext";
 
 function NProjects() {
   const { projects, setProjects } = useProjects();
+  const { user } = useUser();
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [error, setError] = useState("");
+  const [authMessage, setAuthMessage] = useState("");
   const [newProject, setNewProject] = useState({
     description: "",
     link: "",
@@ -23,11 +26,14 @@ function NProjects() {
   });
 
   useEffect(() => {
+    // Si l'utilisateur n'est pas connecté, vider la liste des projets
+    if (!user) {
+      setProjects([]);
+      return;
+    }
+
     fetch("http://localhost:5001/api/projects", {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      credentials: 'include'
+      credentials: 'include' // Le token est maintenant dans le cookie HttpOnly
     })
       .then(async (response) => {
         if (!response.ok) {
@@ -40,11 +46,23 @@ function NProjects() {
       .catch((error) => {
         console.error("Error fetching projects:", error);
         setError(error.message);
+        // Si erreur d'authentification, vider les projets
+        if (error.message.includes("authentification") || error.message.includes("401")) {
+          setProjects([]);
+        }
       });
-  }, [setProjects]);
+  }, [setProjects, user]);
 
   const handleAddShow = () => {
+    // Vérifier si l'utilisateur est connecté
+    if (!user) {
+      setAuthMessage("Vous devez être connecté pour ajouter un projet.");
+      setTimeout(() => setAuthMessage(""), 5000); // Message disparaît après 5 secondes
+      return;
+    }
+    
     setError("");
+    setAuthMessage("");
     setShowAddModal(true);
   };
   
@@ -86,9 +104,6 @@ function NProjects() {
       const response = await fetch("http://localhost:5001/api/projects", {
         method: "POST",
         body: formData,
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
         credentials: 'include'
       });
 
@@ -127,9 +142,6 @@ function NProjects() {
       const putResponse = await fetch(`http://localhost:5001/api/projects/${editableProject.id}` , {
         method: "PUT",
         body: formData,
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
         credentials: 'include'
       });
 
@@ -145,10 +157,7 @@ function NProjects() {
         const addResponse = await fetch("http://localhost:5001/api/projects", {
           method: "POST",
           body: formData,
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-          credentials: 'include'
+          credentials: 'include' // Token dans cookie HttpOnly
         });
 
         if (!addResponse.ok) {
@@ -200,9 +209,6 @@ function NProjects() {
     try {
       const response = await fetch(`http://localhost:5001/api/projects/${id}`, {
         method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
         credentials: 'include'
       });
 
@@ -227,6 +233,7 @@ function NProjects() {
       <div className="projects-header">
         <h1>Mes Projets</h1>
         {error && <div className="alert alert-danger">{error}</div>}
+        {authMessage && <Alert variant="warning" className="mt-3">{authMessage}</Alert>}
       </div>
       
       <div className="add-project-container">

@@ -109,3 +109,15 @@ userRouter.post('/register', CUser.register)
  *         description: The user was not found
  */
 userRouter.post('/login', CUser.login)
+
+/**
+ * @swagger
+ * /api/users/logout:
+ *   post:
+ *     description: Logout a user
+ *     tags: [Users]
+ *     responses:
+ *       200:
+ *         description: Logout successful
+ */
+userRouter.post('/logout', CUser.logout)

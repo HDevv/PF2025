@@ -6,7 +6,9 @@
 - requêtes SQL complexes pour les stats ✅
 - être capable de justifier les technologies utilisées 
 - Lancer les tests et en parler dans le dossier (captures résultats)
-- Réparer le formulaire de contact
+- Rédiger la partie sur les tests 
+- Réparer le formulaire de contact ✅
+- optimiser le mode clair
 
 
 on peut voir les users à partir du fichier database.sqlite

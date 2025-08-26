@@ -20,15 +20,27 @@ export const checkToken = (req: Request, res: Response, next: NextFunction) => {
         const headerToken = req.headers.authorization?.split(" ")[1];
         const token = cookieToken || headerToken || "";
 
-        if (!token) throw new ExpressError(401, "route protégée");
+        console.log(`checkToken - Cookie: ${!!cookieToken}, Header: ${!!headerToken}, Token: ${!!token}`);
+
+        if (!token) {
+            console.log("No token found, rejecting request");
+            throw new ExpressError(401, "Token d'authentification requis");
+        }
 
         const decoded = jwt.verify(token, SECRET_TOKEN) as User;
+        console.log(`Token decoded successfully for user: ${decoded.email}`);
+        
         if (decoded) {
             req.user = decoded;
             return next();
         }
-        throw new ExpressError(401, "route protégée");
-    } catch (e) {
-        next(e);
+        throw new ExpressError(401, "Token invalide");
+    } catch (e: any) {
+        console.log(`checkToken error: ${e.message}`);
+        if (e instanceof jwt.JsonWebTokenError) {
+            next(new ExpressError(401, "Token invalide"));
+        } else {
+            next(e);
+        }
     }
 }
